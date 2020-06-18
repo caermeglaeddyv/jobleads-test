@@ -1,0 +1,21 @@
+FROM alpine:3.10.3
+
+LABEL maintainer.name="Ilham Alizada`" \
+      maintainer.email="ilham.alizada@hotmail.com"
+
+WORKDIR /project
+
+COPY . .
+
+RUN apk update --no-cache \
+&& apk upgrade --no-cache \
+&& apk add --no-cache python3=3.7.7-r0 gcc musl-dev \
+&& apk add --no-cache --virtual .build-deps python3-dev=3.7.7-r0 \
+&& pip3 install --no-cache-dir -U pip \
+&& pip3 install --no-cache-dir pipenv \
+&& pipenv sync \
+&& apk del .build.deps
+
+ENV PATH="/project:$PATH"
+
+CMD ["pipenv","run","python","-u","server.py"]

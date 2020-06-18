@@ -1,0 +1,7 @@
+.*
+*
+!Pipfile
+!Pipfile.lock
+!server.py
+!settings.py
+!storage.py
