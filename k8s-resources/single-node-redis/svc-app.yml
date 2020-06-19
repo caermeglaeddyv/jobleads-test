@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: incrementer-app
+  namespace: jobleads-test
+  labels:
+    app: jobleads-test
+    component: incrementer-app
+    version: v0.0.1-debian-buster-slim
+spec:
+  type: LoadBalancer
+  loadBalancerIP: 34.65.237.102
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
+  selector:
+    app: jobleads-test
+    component: incrementer-app
+    version: v0.0.1-debian-buster-slim

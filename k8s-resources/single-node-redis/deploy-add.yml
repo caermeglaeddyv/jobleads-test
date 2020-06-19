@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: incrementer-app
+  namespace: jobleads-test
+  labels:
+    app: jobleads-test
+    component: incrementer-app
+    version: v0.0.1-debian-buster-slim
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: jobleads-test
+      component: incrementer-app
+      version: v0.0.1-debian-buster-slim
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: jobleads-test
+        component: incrementer-app
+        version: v0.0.1-debian-buster-slim
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  app: jobleads-test
+                  component: incrementer-app
+                  version: v0.0.1-debian-buster-slim
+              topologyKey: kubernetes.io/hostname
+      imagePullSecrets:
+      - name: incrementer-app-regcred
+      containers:
+      - name: incrementer-app
+        image: docker.pkg.github.com/caermeglaeddyv/jobleads-test/incrementer-app:0.0.1-debian-buster-slim
+        imagePullPolicy: Always
+        env:
+        - name: REDIS_HOST
+          value: incrementer-app-redis-server
+        ports:
+        - name: http
+          containerPort: 8080

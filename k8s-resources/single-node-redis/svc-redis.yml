@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: incrementer-app-redis-server
+  namespace: jobleads-test
+  labels:
+    app: jobleads-test
+    component: redis-server
+    version: 5.0.6-alpine
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: redis-server
+    port: 6379
+    protocol: TCP
+    targetPort: redis-server
+  selector:
+    app: jobleads-test
+    component: redis-server
+    version: 5.0.6-alpine

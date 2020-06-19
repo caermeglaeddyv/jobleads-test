@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: incrementer-app-redis-server
+  namespace: jobleads-test
+  labels:
+    app: jobleads-test
+    component: redis-server
+    version: 5.0.6-alpine
+spec:
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: jobleads-test
+      component: redis-server
+      version: 5.0.6-alpine
+  serviceName: incrementer-app-redis-server
+  podManagementPolicy: OrderedReady
+  template:
+    metadata:
+      labels:
+        app: jobleads-test
+        component: redis-server
+        version: 5.0.6-alpine
+    spec:
+      containers:
+      - name: redis-server
+        image: redis:5.0.6-alpine
+        imagePullPolicy: Always
+        command:
+        - redis-server
+        ports:
+        - name: redis-server
+          containerPort: 6379
