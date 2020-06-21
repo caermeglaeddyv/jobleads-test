@@ -2,10 +2,14 @@ import json
 import settings
 
 from klein import Klein
-from storage import Storage
+from storage import SingleRedis, SentinelRedis
 
 app = Klein()
-storage = Storage(settings.REDIS_HOST, settings.REDIS_PORT, settings.REDIS_PWD)
+
+if settings.SENTINEL_HOST:
+    storage = SentinelRedis(settings.SENTINEL_HOST, settings.SENTINEL_PORT, settings.SENTINEL_MASTER_GROUP, settings.SENTINEL_PWD)
+else:
+    storage = SingleRedis(settings.REDIS_HOST, settings.REDIS_PORT, settings.REDIS_PWD)
 
 
 @app.route('/')

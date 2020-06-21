@@ -1,0 +1,148 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: incrementer-app-redis-ha-server
+  namespace: jobleads-test-ha
+  labels:
+    app: jobleads-test-ha
+    component: redis-ha
+    version: 5.0.6-alpine
+spec:
+  replicas: 3
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: jobleads-test-ha
+      component: redis-ha
+      version: 5.0.6-alpine
+  serviceName: incrementer-app-redis-ha
+  podManagementPolicy: OrderedReady
+  template:
+    metadata:
+      labels:
+        app: jobleads-test-ha
+        component: redis-ha
+        version: 5.0.6-alpine
+    spec:
+      containers:
+      - name: redis
+        image: redis:5.0.6-alpine
+        imagePullPolicy: Always
+        command:
+        - redis-server
+        args:
+        - /data/conf/redis.conf
+        env:
+        - name: AUTH
+          valueFrom:
+            secretKeyRef:
+              name: incrementer-app-redis-ha
+              key: auth
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - /probes/readiness.sh
+            - "6379"
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - /probes/liveness.sh
+            - "6379"
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        ports:
+        - name: redis
+          containerPort: 6379
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        - mountPath: /probes
+          name: probes
+      - name: sentinel
+        image: redis:5.0.6-alpine
+        imagePullPolicy: Always
+        command:
+        - redis-sentinel
+        args:
+        - /data/conf/sentinel.conf
+        env:
+        - name: AUTH
+          valueFrom:
+            secretKeyRef:
+              name: incrementer-app-redis-ha
+              key: auth
+        readinessProbe:
+          exec:
+            command:
+            - sh
+            - /probes/readiness.sh
+            - "26379"
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        livenessProbe:
+          exec:
+            command:
+            - sh
+            - /probes/readiness.sh
+            - "26379"
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        ports:
+        - name: sentinel
+          containerPort: 26379
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        - mountPath: /probes
+          name: probes
+      initContainers:
+      - name: redis-ha-config-init
+        image: redis:5.0.6-alpine
+        imagePullPolicy: Always
+        command:
+        - sh
+        args:
+        - /readonly-config/init.sh
+        env:
+        - name: SENTINEL_ID_0
+          value: e15229a06c5f0e9a4dd308152670a9e2242e728c
+        - name: SENTINEL_ID_1
+          value: 164afa3af0de56e73991db5663ba4f94e1475cad
+        - name: SENTINEL_ID_2
+          value: 5b68b03b989dc9bf5e9508182a452929c4b9a839
+        - name: AUTH
+          valueFrom:
+            secretKeyRef:
+              name: incrementer-app-redis-ha
+              key: auth
+        volumeMounts:
+        - name: config
+          mountPath: /readonly-config
+          readOnly: true
+        - name: data
+          mountPath: /data
+      volumes:
+      - name: config
+        configMap:
+          name: incrementer-app-redis-ha
+      - name: probes
+        configMap:
+          name: incrementer-app-redis-ha-probes
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+      labels:
+        app: jobleads-test-ha
+        component: redis-ha
+        version: 5.0.6-alpine
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi

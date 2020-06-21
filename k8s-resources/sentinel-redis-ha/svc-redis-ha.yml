@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: incrementer-app-redis-ha
+  namespace: jobleads-test-ha
+  labels:
+    app: jobleads-test
+    component: redis-ha
+    version: 5.0.6-alpine
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: server
+    port: 6379
+    protocol: TCP
+    targetPort: redis
+  - name: sentinel
+    port: 26379
+    protocol: TCP
+    targetPort: sentinel
+  selector:
+    app: jobleads-test
+    component: redis-ha
+    version: 5.0.6-alpine

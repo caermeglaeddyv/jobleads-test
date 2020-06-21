@@ -1,0 +1,6 @@
+Dockerfile-*
+.gitsecret/keys/random_seed
+!*.secret
+k8s-resources/single-node-redis/secret-app-regcred.yml
+k8s-resources/sentinel-redis-ha/secret-app-regcred.yml
+k8s-resources/sentinel-redis-ha/secret-redis-ha.yml

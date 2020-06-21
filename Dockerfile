@@ -1,6 +1,6 @@
 FROM debian:buster-20191118-slim
 
-LABEL maintainer.name="Ilham Alizade" \
+LABEL maintainer.name="Ilham Alizada" \
       maintainer.email="ilham.alizada@hotmail.com"
 
 WORKDIR /project
