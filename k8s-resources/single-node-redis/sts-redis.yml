@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: incrementer-app-redis-server
+  name: counter-app-redis-server
   namespace: jobleads-test
   labels:
     app: jobleads-test
@@ -16,7 +16,7 @@ spec:
       app: jobleads-test
       component: redis-server
       version: 5.0.6-alpine
-  serviceName: incrementer-app-redis-server
+  serviceName: counter-app-redis-server
   podManagementPolicy: OrderedReady
   template:
     metadata:

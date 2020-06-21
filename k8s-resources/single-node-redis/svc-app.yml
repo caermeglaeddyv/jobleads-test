@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: incrementer-app
+  name: counter-app
   namespace: jobleads-test
   labels:
     app: jobleads-test
-    component: incrementer-app
+    component: counter-app
     version: v0.0.1-debian-buster-slim
 spec:
   type: LoadBalancer
@@ -17,5 +17,5 @@ spec:
     targetPort: http
   selector:
     app: jobleads-test
-    component: incrementer-app
+    component: counter-app
     version: v0.0.1-debian-buster-slim

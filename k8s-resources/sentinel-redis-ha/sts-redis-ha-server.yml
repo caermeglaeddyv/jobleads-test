@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: incrementer-app-redis-ha-server
+  name: counter-app-redis-ha-server
   namespace: jobleads-test-ha
   labels:
     app: jobleads-test-ha
@@ -16,7 +16,7 @@ spec:
       app: jobleads-test-ha
       component: redis-ha
       version: 5.0.6-alpine
-  serviceName: incrementer-app-redis-ha
+  serviceName: counter-app-redis-ha
   podManagementPolicy: OrderedReady
   template:
     metadata:
@@ -37,7 +37,7 @@ spec:
         - name: AUTH
           valueFrom:
             secretKeyRef:
-              name: incrementer-app-redis-ha
+              name: counter-app-redis-ha
               key: auth
         readinessProbe:
           exec:
@@ -74,7 +74,7 @@ spec:
         - name: AUTH
           valueFrom:
             secretKeyRef:
-              name: incrementer-app-redis-ha
+              name: counter-app-redis-ha
               key: auth
         readinessProbe:
           exec:
@@ -118,7 +118,7 @@ spec:
         - name: AUTH
           valueFrom:
             secretKeyRef:
-              name: incrementer-app-redis-ha
+              name: counter-app-redis-ha
               key: auth
         volumeMounts:
         - name: config
@@ -129,10 +129,10 @@ spec:
       volumes:
       - name: config
         configMap:
-          name: incrementer-app-redis-ha
+          name: counter-app-redis-ha
       - name: probes
         configMap:
-          name: incrementer-app-redis-ha-probes
+          name: counter-app-redis-ha-probes
   volumeClaimTemplates:
   - metadata:
       name: data

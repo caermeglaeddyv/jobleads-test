@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: incrementer-app-redis-ha-announce-0
+  name: counter-app-redis-ha-announce-0
   namespace: jobleads-test-ha
   labels:
     app: jobleads-test-ha
@@ -25,4 +25,4 @@ spec:
     app: jobleads-test-ha
     component: redis-ha
     version: 5.0.6-alpine
-    "statefulset.kubernetes.io/pod-name": incrementer-app-redis-ha-server-0
+    "statefulset.kubernetes.io/pod-name": counter-app-redis-ha-server-0

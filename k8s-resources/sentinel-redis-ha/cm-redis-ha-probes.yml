@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: incrementer-app-redis-ha-probes
+  name: counter-app-redis-ha-probes
   namespace: jobleads-test-ha
   labels:
     app: jobleads-test-ha
