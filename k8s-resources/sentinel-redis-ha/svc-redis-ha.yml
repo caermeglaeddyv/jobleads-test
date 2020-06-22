@@ -4,7 +4,7 @@ metadata:
   name: counter-app-redis-ha
   namespace: jobleads-test-ha
   labels:
-    app: jobleads-test
+    app: jobleads-test-ha
     component: redis-ha
     version: 5.0.6-alpine
 spec:
@@ -20,6 +20,6 @@ spec:
     protocol: TCP
     targetPort: sentinel
   selector:
-    app: jobleads-test
+    app: jobleads-test-ha
     component: redis-ha
     version: 5.0.6-alpine

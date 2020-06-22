@@ -9,7 +9,7 @@ metadata:
     version: v0.0.1-debian-buster-slim
 spec:
   type: LoadBalancer
-  loadBalancerIP: 34.65.209.78
+  loadBalancerIP: 34.65.27.77
   ports:
   - name: http
     port: 80

@@ -1,5 +1,5 @@
 import redis
-
+from redis.sentinel import Sentinel
 
 class SingleRedis:
     _key = "upfront-task:counter"
@@ -24,7 +24,7 @@ class SentinelRedis:
     _key = "upfront-task:counter"
 
     def __init__(self, host, port, master_group, password=None):
-        self._sentinel = redis.Sentinel([(host, port, password)], socket_timeout=0.1)
+        self._sentinel = Sentinel([(host, port)], socket_timeout=0.1, password=password)
         self._master = self._sentinel.master_for(master_group, socket_timeout=0.1)
         self._slave = self._sentinel.slave_for(master_group, socket_timeout=0.1)
 
