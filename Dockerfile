@@ -3,9 +3,9 @@ FROM debian:buster-20191118-slim
 LABEL maintainer.name="Ilham Alizada" \
       maintainer.email="ilham.alizada@hotmail.com"
 
-RUN apt update -y \
-&& apt upgrade -y \
-&& apt install -y pipenv
+RUN apt-get update \
+&& apt-get -y upgrade \
+&& apt-get -y install --no-install-recommends pipenv
 
 WORKDIR /project
 
