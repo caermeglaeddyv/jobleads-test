@@ -41,7 +41,7 @@ spec:
       - name: counter-app-regcred
       containers:
       - name: counter-app
-        image: docker.pkg.github.com/caermeglaeddyv/jobleads-test/counter-app:0.0.2-debian-buster-slim
+        image: docker.pkg.github.com/caermeglaeddyv/jobleads-test/counter-app:0.0.1-python-slim-buster
         imagePullPolicy: Always
         env:
         - name: SENTINEL_HOST

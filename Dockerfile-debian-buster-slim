@@ -1,4 +1,4 @@
-FROM python:3.7.7-slim-buster
+FROM debian:buster-20191118-slim
 
 LABEL maintainer.name="Ilham Alizada" \
       maintainer.email="ilham.alizada@hotmail.com"

@@ -1,4 +1,4 @@
-Dockerfile-*
+Dockerfile-*.local
 .gitsecret/keys/random_seed
 !*.secret
 k8s-resources/single-node-redis/secret-app-regcred.yml
