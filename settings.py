@@ -12,5 +12,5 @@ REDIS_PWD = os.environ.get("REDIS_PWD", "")
 # Sentinel settings
 SENTINEL_HOST = os.getenv("SENTINEL_HOST", "")
 SENTINEL_PORT = os.getenv("SENTINEL_PORT", 26379)
-SENTINEL_PWD = os.environ.get("SENTINEL_PWD", "")
-SENTINEL_MASTER_GROUP = os.getenv("SENTINEL_NASTER_GROUP", "redis-ha")
+SENTINEL_PWD = os.getenv("SENTINEL_PWD", "")
+SENTINEL_MASTER_GROUP = os.getenv("SENTINEL_MASTER_GROUP", "redis-ha")
