@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "counter-app.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "counter-app.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "counter-app.selectorLabels" . | nindent 6 }}
+  strategy:
+    rollingUpdate:
+      {{- toYaml .Values.rollingUpdate | nindent 6 }}
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        {{- include "counter-app.selectorLabels" . | nindent 8 }}
+      annotations:
+        checksum/regcred: {{ include ( print $.Template.BasePath "/secret-regcred.yml" ) . | sha1sum }}
+    spec:
+      {{- if ne ( index .Values "redis-ha" "storage" "type" ) "local" }}
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchLabels:
+                  {{- include "counter-app.selectorLabels" . | nindent 18 }}
+              topologyKey: kubernetes.io/hostname
+      {{- end }}
+      {{- if and .Values.rbac.enabled .Values.serviceAccount.create }}
+      serviceAccountName: {{ include "counter-app.serviceAccountName" . }}
+      {{- end }}
+      {{- if not .Values.imagePullSecrets.existing }}
+      imagePullSecrets:
+      - name: {{ include "counter-app.fullname" . }}-regcred
+      {{- else }}
+      {{- toYaml .Values.imagePullSecrets.names | nindent 8 }}
+      {{- end }}
+      containers:
+      - name: {{ .Chart.Name }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+        {{- if not ( index .Values "redis-ha" "enabled" ) }}
+        - name: REDIS_HOST
+          value: {{ include "counter-app.fullname" . }}-redis-server
+        {{- else }}
+        - name: SENTINEL_HOST
+          value: {{ include "counter-app.fullname" . }}-redis-ha
+        - name: SENTINEL_MASTER_GROUP
+          value: {{ index .Values "redis-ha" "sentinel" "masterGroup" }}
+        - name: SENTINEL_PWD
+          valueFrom:
+            secretKeyRef:
+              name: {{ include "counter-app.fullname" . }}-redis-ha
+              key: auth
+        {{- end }}
+        {{- if .Values.env }}
+        {{- toYaml .Values.env | nindent 8 }}
+        {{- end }}
+        ports:
+        - name: http
+          containerPort: 8080
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}

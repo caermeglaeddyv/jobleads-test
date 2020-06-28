@@ -1,0 +1,21 @@
+{{- if not ( index .Values "redis-ha" "enabled" ) -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "counter-app.fullname" . }}-redis-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "counter-app.labels" . | nindent 4 }}
+    part-of: redis-server
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+  - name: redis-server
+    port: {{ .Values.redis.service.port }}
+    protocol: TCP
+    targetPort: redis-server
+  selector:
+    {{- include "counter-app.labels" . | nindent 4 }}
+    part-of: redis-server
+{{- end -}}

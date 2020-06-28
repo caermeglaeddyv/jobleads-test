@@ -1,0 +1,27 @@
+
+replicaCount: 3
+
+service:
+  type: LoadBalancer
+  loadBalancer:
+    ip: 34.65.237.102
+
+image:
+  tag: 0.0.2-python-slim-booster
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+redis:
+  resources:
+    limits:
+      cpu: 300m
+      memory: 600Mi
+    requests:
+      cpu: 150m
+      memory: 300Mi

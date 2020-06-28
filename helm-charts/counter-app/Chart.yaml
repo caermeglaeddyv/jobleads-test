@@ -1,0 +1,14 @@
+apiVersion: v2
+name: counter-app
+description: Test application that gets, increments and deletes redis key via rest api
+type: application
+kubeVersion: ">=1.14.1 || v1.14.10-gke.36"
+version: 0.0.1
+maintainers:
+- name: Ilham Alizada
+  email: ilham.alizada@hotmail.com
+dependencies:
+- name: redis-ha
+  version: 0.1.0
+  repository: https://raw.githubusercontent.com/caermeglaeddyv/helm-charts/dev/
+  condition: redis-ha.enabled

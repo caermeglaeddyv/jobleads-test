@@ -1,0 +1,6 @@
+dependencies:
+- name: redis-ha
+  repository: https://raw.githubusercontent.com/caermeglaeddyv/helm-charts/dev/
+  version: 0.1.0
+digest: sha256:d07790771b787ededed95025a3112844a66fa4dab5cda257f5c7cea95d5446da
+generated: "2020-06-28T22:10:05.747591978+04:00"

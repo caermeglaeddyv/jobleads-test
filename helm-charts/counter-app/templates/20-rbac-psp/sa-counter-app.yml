@@ -1,0 +1,9 @@
+{{- if and .Values.rbac.enabled .Values.serviceAccount.create -}}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ include "counter-app.serviceAccountName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "counter-app.labels" . | nindent 4 }}
+{{- end -}}

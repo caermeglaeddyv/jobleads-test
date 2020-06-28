@@ -1,0 +1,85 @@
+
+nameOverride: ""
+fullnameOverride: ""
+
+ingress:
+  create: false
+
+rbac:
+  enabled: false
+
+psp:
+  enabled: false
+  runAsUser: ""
+  runAsGroup: ""
+  fsGroup: ""
+
+serviceAccount:
+  create: true
+  name: counter-app
+
+redis-ha:
+  enabled: false
+  rbac:
+    enabled: false
+  serviceAccount:
+    name: counter-app-ha-redis-ha
+  psp:
+    runAsUser: ""
+    runAsGroup: ""
+    fsGroup: ""
+  storage:
+    type: ""
+    size: ""
+    pathPrefix: ""
+    local:
+      node: ""
+    glusterfs:
+      servers:
+      - ""
+  sentinel:
+    masterGroup: counter-app-master
+    resources: {}
+  redis:
+    conf:
+      appendonly:
+        enabled: "no"
+    resources: {}
+  redisPassword: ""
+
+service:
+  type: ClusterIP
+  loadBalancer:
+    ip: 
+  port: 80
+
+rollingUpdate:
+  maxSurge: 1
+  maxUnavailable: 25%
+
+replicaCount: 
+
+imagePullSecrets:
+  existing: false
+  names:
+  - ""
+
+image:
+  repository: docker.pkg.github.com/caermeglaeddyv/jobleads-test/counter-app
+  tag: 0.0.1-python-slim-booster
+  pullPolicy: Always
+
+env: []
+
+redis:
+  service:
+    port: 6379
+  image: 
+    repository: redis
+    tag: 5.0.6-alpine
+    pullPolicy: Always
+  resources: {}
+
+resources: {}
+
+tolerations: []

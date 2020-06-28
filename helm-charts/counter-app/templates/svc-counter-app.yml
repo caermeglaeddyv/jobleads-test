@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "counter-app.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "counter-app.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  {{- if eq .Values.service.type "LoadBalancer" }}
+  loadBalancerIP: {{ .Values.service.loadBalancer.ip }}
+  {{- end }}
+  ports:
+  - name: counter-app
+    port: {{ .Values.service.port }}
+    protocol: TCP
+    targetPort: http
+  selector:
+    {{- include "counter-app.selectorLabels" . | nindent 4 }}

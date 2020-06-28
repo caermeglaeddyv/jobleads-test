@@ -1,0 +1,35 @@
+{{- if not ( index .Values "redis-ha" "enabled" ) -}}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "counter-app.fullname" . }}-redis-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "counter-app.labels" . | nindent 4 }}
+    part-of: redis-server
+spec:
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "counter-app.labels" . | nindent 6 }}
+      part-of: redis-server
+  serviceName: {{ include "counter-app.fullname" . }}-redis-server
+  podManagementPolicy: OrderedReady
+  template:
+    metadata:
+      labels:
+        {{- include "counter-app.labels" . | nindent 8 }}
+        part-of: redis-server
+    spec:
+      containers:
+      - name: {{ include "counter-app.fullname" . }}-redis-server
+        image: {{ .Values.redis.image.repository }}:{{ .Values.redis.image.tag }}
+        imagePullPolicy: {{ .Values.redis.image.pullPolicy }}
+        command:
+        - redis-server
+        ports:
+        - name: redis-server
+          containerPort: 6379
+{{- end -}}
