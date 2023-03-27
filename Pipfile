@@ -6,7 +6,7 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-redis = "==3.3.*"
+redis = "==4.5.*"
 klein = "==16.12"
 
 [requires]
